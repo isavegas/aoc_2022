@@ -1,0 +1,6 @@
+/.env
+/.envrc
+/target
+**/*.rs.bk
+**/*.save
+**/*.swp
