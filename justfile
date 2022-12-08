@@ -74,8 +74,8 @@ download_input day:
 @info:
     echo {{name}} :: {{os()}} {{arch()}}
 
-@run day:
-    cargo run -- run -d {{day}}
+@run day='':
+    cargo run -- run $(test -z "{{day}}" || echo -d {{day}})
 
 # Watch for code changes, running against input
 @watch_run day:
