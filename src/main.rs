@@ -2,7 +2,7 @@ use aoc_core::AoCProject;
 
 pub fn main() {
     let project = AoCProject::new(
-        2021,
+        2022,
         env!("CARGO_PKG_VERSION").to_string(),
         None,
         "isavegas".to_string(),
