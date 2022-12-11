@@ -1,3 +1,5 @@
+#![feature(iter_array_chunks)]
+
 use aoc_core::AoCProject;
 
 pub fn main() {

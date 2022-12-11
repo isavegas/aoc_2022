@@ -13,8 +13,8 @@ struct Rucksack {
     pub b: Vec<char>,
 }
 
-fn value_of(c: &char) -> usize {
-    let u = *c as usize;
+fn value_of(c: &char) -> Num {
+    let u = *c as Num;
     match u {
         _ if u >= 65 && u <= 90 => (u - 64) + 26,
         _ if u >= 97 && u <= 122 => u - 96,
@@ -34,36 +34,52 @@ fn parse_rucksack(line: &str) -> Result<Rucksack, ErrorWrapper> {
     })
 }
 
+fn common_chars(vec_a: &Vec<char>, vec_b: &Vec<char>) -> Vec<char> {
+    let mut a = vec_a.clone();
+    let mut b = vec_b.clone();
+    a.sort();
+    b.sort();
+    a.dedup();
+    b.dedup();
+    a.extend(b);
+    a.sort();
+    let mut out = vec![];
+    let mut last = &'\0';
+    for c in &a {
+        if last == c {
+            out.push(*c);
+        }
+        last = c;
+    }
+    return out;
+}
+
 impl AoCDay for Day03 {
     fn day(&self) -> usize {
         03
     }
     fn expected(&self) -> (Option<&'static str>, Option<&'static str>) {
-        (Some("7785"), None)
+        (Some("7785"), Some("2633"))
     }
     fn part1(&self, input: &str) -> Result<String, ErrorWrapper> {
         let mut rucksacks = parse_lines_with(input, parse_rucksack)?;
         let mut score = 0;
         for sack in &mut rucksacks {
-            sack.a.sort();
-            sack.a.dedup();
-            sack.b.sort();
-            sack.b.dedup();
-            let mut total = sack.a.clone();
-            total.extend(sack.b.clone());
-            total.sort();
-            let mut last = '\0';
-            for c in &total {
-                if last == *c {
-                    score += value_of(c) as Num;
-                }
-                last = *c;
-            }
+            score += value_of(&common_chars(&sack.a, &sack.b).first().unwrap_or(&'\0'));
         }
         Ok(score.to_string())
     }
-    fn part2(&self, _input: &str) -> Result<String, ErrorWrapper> {
-        Err(ErrorWrapper::NotImplemented)
+    fn part2(&self, input: &str) -> Result<String, ErrorWrapper> {
+        Ok(input
+            .lines()
+            .array_chunks::<3>()
+            .map(|[a, b, c]| {
+                let common_a_b = common_chars(&a.chars().collect(), &b.chars().collect());
+                let common_all = common_chars(&common_a_b, &c.chars().collect());
+                value_of(common_all.first().unwrap_or(&'\0'))
+            })
+            .sum::<Num>()
+            .to_string())
     }
 }
 

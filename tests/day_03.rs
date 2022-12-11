@@ -14,5 +14,5 @@ pub fn part1() {
 
 #[test]
 pub fn part2() {
-    assert_eq!(get_day().part2(INPUT).expect("Error"), "".to_string());
+    assert_eq!(get_day().part2(INPUT).expect("Error"), "70".to_string());
 }
