@@ -16,8 +16,8 @@ struct Rucksack {
 fn value_of(c: &char) -> Num {
     let u = *c as Num;
     match u {
-        _ if u >= 65 && u <= 90 => (u - 64) + 26,
-        _ if u >= 97 && u <= 122 => u - 96,
+        _ if (65..=90).contains(&u) => (u - 64) + 26,
+        _ if (97..=122).contains(&u) => u - 96,
         _ => 0,
     }
 }
@@ -34,9 +34,9 @@ fn parse_rucksack(line: &str) -> Result<Rucksack, ErrorWrapper> {
     })
 }
 
-fn common_chars(vec_a: &Vec<char>, vec_b: &Vec<char>) -> Vec<char> {
-    let mut a = vec_a.clone();
-    let mut b = vec_b.clone();
+fn common_chars(vec_a: &[char], vec_b: &[char]) -> Vec<char> {
+    let mut a = vec_a.to_owned();
+    let mut b = vec_b.to_owned();
     a.sort();
     b.sort();
     a.dedup();
@@ -51,7 +51,7 @@ fn common_chars(vec_a: &Vec<char>, vec_b: &Vec<char>) -> Vec<char> {
         }
         last = c;
     }
-    return out;
+    out
 }
 
 impl AoCDay for Day03 {
@@ -65,7 +65,7 @@ impl AoCDay for Day03 {
         let mut rucksacks = parse_lines_with(input, parse_rucksack)?;
         let mut score = 0;
         for sack in &mut rucksacks {
-            score += value_of(&common_chars(&sack.a, &sack.b).first().unwrap_or(&'\0'));
+            score += value_of(common_chars(&sack.a, &sack.b).first().unwrap_or(&'\0'));
         }
         Ok(score.to_string())
     }
@@ -74,8 +74,11 @@ impl AoCDay for Day03 {
             .lines()
             .array_chunks::<3>()
             .map(|[a, b, c]| {
-                let common_a_b = common_chars(&a.chars().collect(), &b.chars().collect());
-                let common_all = common_chars(&common_a_b, &c.chars().collect());
+                let common_a_b = common_chars(
+                    &a.chars().collect::<Vec<char>>(),
+                    &b.chars().collect::<Vec<char>>(),
+                );
+                let common_all = common_chars(&common_a_b, &c.chars().collect::<Vec<char>>());
                 value_of(common_all.first().unwrap_or(&'\0'))
             })
             .sum::<Num>()

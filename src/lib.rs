@@ -1,3 +1,4 @@
+#![allow(clippy::zero_prefixed_literal)]
 #![feature(iter_array_chunks)]
 
 pub mod day;

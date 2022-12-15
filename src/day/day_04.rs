@@ -37,24 +37,19 @@ impl AoCDay for Day04 {
         04
     }
     fn expected(&self) -> (Option<&'static str>, Option<&'static str>) {
-        (Some("485"), None)
+        (Some("485"), Some("857"))
     }
     fn part1(&self, input: &str) -> Result<String, ErrorWrapper> {
         let pairs: Vec<(Range<Num>, Range<Num>)> = parse_lines_with(input, parse_pair)?;
         Ok(pairs
             .iter()
-            .filter(|p| fully_contains(*p))
+            .filter(|p| fully_contains(p))
             .count()
             .to_string())
     }
     fn part2(&self, input: &str) -> Result<String, ErrorWrapper> {
         let pairs: Vec<(Range<Num>, Range<Num>)> = parse_lines_with(input, parse_pair)?;
-        Ok(pairs
-            .iter()
-            .inspect(|p| println!("overlaps({p:?}) -> {}", overlaps(p)))
-            .filter(|p| overlaps(*p))
-            .count()
-            .to_string())
+        Ok(pairs.iter().filter(|p| overlaps(p)).count().to_string())
     }
 }
 

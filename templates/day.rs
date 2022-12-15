@@ -1,7 +1,9 @@
+#[allow(unused_imports)]
 use aoc_core::{AoCDay, ErrorWrapper, parse, bail, ensure};
 
 pub struct Day@DAY@;
 
+#[allow(dead_code)]
 type Num = u64;
 
 impl AoCDay for Day@DAY@ {
@@ -11,10 +13,12 @@ impl AoCDay for Day@DAY@ {
     fn expected(&self) -> (Option<&'static str>, Option<&'static str>) {
         (None, None)
     }
-    fn part1(&self, _input: &str) -> Result<String, ErrorWrapper> {
+    #[allow(unused_variables)]
+    fn part1(&self, input: &str) -> Result<String, ErrorWrapper> {
         Err(ErrorWrapper::NotImplemented)
     }
-    fn part2(&self, _input: &str) -> Result<String, ErrorWrapper> {
+    #[allow(unused_variables)]
+    fn part2(&self, input: &str) -> Result<String, ErrorWrapper> {
         Err(ErrorWrapper::NotImplemented)
     }
 }

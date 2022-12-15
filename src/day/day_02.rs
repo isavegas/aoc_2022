@@ -48,7 +48,7 @@ impl Play {
         match *self {
             Self::Win => opponent.loses_to(),
             Self::Lose => opponent.wins_against(),
-            Self::Draw => opponent.clone(),
+            Self::Draw => *opponent,
         }
     }
 }
