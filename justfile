@@ -22,14 +22,6 @@ alias wc := watch_clippy
 @update_core:
     git -C aoc_core pull origin master
 
-test day='all':
-    #!/usr/bin/env sh
-    if [[ "{{day}}" = "all" ]]; then
-        cargo nextest run
-    else
-        cargo nextest run --test day_"$(printf '%02d' {{day}})"
-    fi
-
 generate day:
     #!/usr/bin/env sh
     DAY="$(printf '%02d' {{day}})"
@@ -75,16 +67,19 @@ download_input day:
     echo {{name}} :: {{os()}} {{arch()}}
 
 @run day='' part='':
-    #cargo run -- run $(test -z "{{day}}" || echo -d {{day}})
     cargo run -- run {{if day != "" { "-d " + day } else { "" } }} {{if part != "" { "-p " + part } else { "" } }}
 
 # Watch for code changes, running against input
-@watch_run day:
-    cargo watch -c -x 'run -- run -d {{day}}'
+@watch_run day='' part='':
+    cargo watch -c -x 'run -- run {{if day != "" { "-d " + day } else { "" } }} {{if part != "" { "-p " + part } else { "" } }}'
 
 # Watch for code changes, running tests for day
-@watch_test day:
-    cargo watch -c -x "nextest run --test day_$(printf '%02d' {{day}})"
+@test day part='':
+    cargo nextest run -E "binary(day_$(printf '%02d' {{day}})){{ if part != "" {"& test(part" + part + ")" } else { "" } }}"
+
+# Watch for code changes, running tests for day
+@watch_test day part='':
+    cargo watch -c -x "nextest run -E 'binary(day_$(printf '%02d' {{day}})) {{if part != "" { " & test(part" + part + ")" } else { "" } }}'"
 
 # Watch for code changes, running cargo clippy
 @watch_clippy:
